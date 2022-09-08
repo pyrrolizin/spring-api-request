@@ -45,6 +45,14 @@ cp ./application.properties_default ./application.properties
 
 Learn more about the OpenWeatherMap API: https://openweathermap.org/api
 
+## Testing
+
+You can test the backend and the connection to the openweather api with
+
+```bash
+mvn test
+```
+
 ## Getting Started
 
 First, compile and pack the application:
