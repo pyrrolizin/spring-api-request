@@ -25,7 +25,7 @@ public class WeatherApiCaller {
     @Value("${config.apikey}")
     private String apikey;
 
-    private final String apiurl = "https://api.openweathermap.org/data/2.5/weather?q=Stuttgart,de&units=metric&APPID=";
+    private final String apiurl = "https://api.openweathermap.org/data/2.5/weather?q={city},de&units=metric&APPID={apikey}";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -42,9 +42,9 @@ public class WeatherApiCaller {
      * }
      */
 
-    private String getWeatherApi() {
+    private String getWeatherApi(String city) {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(apiurl + apikey))
+                .uri(URI.create(apiurl.replace("{city}", city).replace("{apikey}", apikey)))
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
         HttpResponse<String> response = null;
@@ -57,7 +57,7 @@ public class WeatherApiCaller {
         }
 
         final String responseString = response.body();
-        System.out.println(">> " + responseString);
+
         return responseString;
 
     }
@@ -66,7 +66,7 @@ public class WeatherApiCaller {
     public Weather getWeather(String city) throws JsonMappingException, JsonProcessingException {
         LOG.info("get current weather from external API");
 
-        final String responseString = getWeatherApi();
+        final String responseString = getWeatherApi(city);
         JsonNode jo = objectMapper.readTree(responseString);
 
         /*
